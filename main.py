@@ -61,6 +61,7 @@ while running:
             result = ".".join(parts)
             if(not config['no_search']):
                 print(f"{constants.colors.OKCYAN}[i] {constants.colors.ENDC}Searching {result}...", end="\r")
+                if(result.startswith(".")): continue
                 available = True
                 catcher = ""
                 try:
