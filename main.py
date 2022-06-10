@@ -37,7 +37,6 @@ for tld in tlds_file['result']:
 running = True
 
 while running:
-    print("="*32)
     inp = input("🔎 Search: ")
     inp = "".join(inp.lower().split())
 
