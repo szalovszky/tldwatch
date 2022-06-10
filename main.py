@@ -65,7 +65,7 @@ while running:
             if(not config['no_search']):
                 print(f"{constants.colors.OKCYAN}[i] {constants.colors.ENDC}Searching {result}...", end="\r")
                 try:
-                    w = whois.whois(result.lower()) # aawdhaiwhdawdicom
+                    w = whois.whois(result.lower())
                 except:
                     w = {'domain_name': None}
                 if(w['domain_name'] is None):
