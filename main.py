@@ -1,11 +1,11 @@
 import argparse
 import whois
-import unicodedata
 import random
 import json
 
 import constants
 import tlds
+from utils import data, dns
 
 parser = argparse.ArgumentParser(description="tldwatch", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -13,9 +13,6 @@ parser.add_argument("--no-search", "-s", default=False, help="Don't look up doma
 
 args = parser.parse_args()
 config = vars(args)
-
-def asciify(string):
-    return unicodedata.normalize('NFD', string).encode('ascii', 'ignore').decode()
 
 try:
     f = open('tlds.json')
@@ -47,7 +44,7 @@ while running:
     if("." in inp):
         continue
 
-    inp = asciify(inp)
+    inp = data.asciify(inp)
 
     found = False
     results = []
@@ -64,18 +61,30 @@ while running:
             result = ".".join(parts)
             if(not config['no_search']):
                 print(f"{constants.colors.OKCYAN}[i] {constants.colors.ENDC}Searching {result}...", end="\r")
+                available = True
+                catcher = ""
                 try:
                     w = whois.whois(result.lower())
                 except:
                     w = {'domain_name': None}
-                if(w['domain_name'] is None):
+                available = w['domain_name'] is None
+                if(available):
+                    dns_results = dns.get(result)
+                    if(type(dns_results) == list):
+                        for dns_result in dns_results:
+                            if(dns_result['type'] == 1):
+                                available = False
+                                catcher = "dns"
+                else:
+                    catcher = "whois"
+                if(available):
                     price = None
                     print(f"{constants.colors.OKGREEN}[✓] {constants.colors.ENDC}{result} is available")
                     if(tld_item is not None):
                         price = tld_item['register']
                     results.append([result, price])
                 else:
-                    print(f"{constants.colors.FAIL}[!] {constants.colors.ENDC}{result} is already registered")
+                    print(f"{constants.colors.FAIL}[!] {constants.colors.ENDC}{result} is already registered (Catched by {catcher})")
             else:
                 results.append(result)
     
