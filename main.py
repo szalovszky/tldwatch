@@ -39,7 +39,7 @@ running = True
 while running:
     print("="*32)
     inp = input("🔎 Search: ")
-    inp = " ".join(inp.lower().split())
+    inp = "".join(inp.lower().split())
 
     if(inp == ""): 
         running = False
@@ -85,6 +85,8 @@ while running:
     if(len(results) > 0):
         print(f"Results:")
         for result in results:
+            if(result[0].startswith(".")):
+                result[0] = "[YOUR-DOMAIN-HERE]" + result[0]
             print(f"\t{constants.colors.OKCYAN + '['+str(result[1])+']' if result[1] is not None else constants.colors.WARNING + '[NP]'} {constants.colors.ENDC}{result[0]}")
 
     print("="*32)
