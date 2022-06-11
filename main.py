@@ -31,6 +31,8 @@ for tld in tlds_file['result']:
     if(tld not in tlds_list):
         tlds_list.append(tld)
 
+if(not config['no_search']):
+    print(f"{constants.colors.WARNING}[!] {constants.colors.ENDC}Availability and pricing may not be 100% correct")
 running = True
 
 while running:
